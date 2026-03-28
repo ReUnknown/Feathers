@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feathers | AI Chat Platform</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div id="app">
+        <!-- Main Sidebar -->
+        <aside class="sidebar" id="main-sidebar">
+            <div class="sidebar-toggle" id="main-sidebar-toggle">
+                <i class="fa-solid fa-chevron-left"></i>
+            </div>
+            <div class="sidebar-header">
+                <i class="fa-solid fa-feather-pointed"></i> <span>Feathers</span>
+            </div>
+
+            <nav class="nav-links">
+                <div class="nav-item active" data-view="chat-view">
+                    <i class="fa-solid fa-message"></i> <span>Chat</span>
+                </div>
+                <div class="nav-item" data-view="extensions-view">
+                    <i class="fa-solid fa-puzzle-piece"></i> <span>Extensions</span>
+                </div>
+                <div class="nav-item" data-view="settings-view">
+                    <i class="fa-solid fa-gear"></i> <span>Settings</span>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Workspace -->
+        <main class="main-content">
+
+            <!-- Chat View -->
+            <section id="chat-view" class="view active" style="padding: 0; flex-direction: row; overflow: hidden;">
+                <!-- Chat Sidebar -->
+                <div class="chat-sidebar" id="chat-sidebar">
+                    <div class="chat-sidebar-header">
+                        <span>All Chats</span>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="icon-btn" id="new-chat-btn"><i class="fa-solid fa-plus"></i></button>
+                            <button class="icon-btn" id="chat-sidebar-toggle"><i
+                                    class="fa-solid fa-chevron-left"></i></button>
+                        </div>
+                    </div>
+                    <div class="chat-list" id="chat-list">
+                        <!-- Chats will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Chat Workspace Area -->
+                <div class="chat-workspace">
+                    <!-- Empty State (Default) -->
+                    <div id="no-chat-selected" class="empty-state">
+                        <div class="empty-state-content">
+                            <div class="empty-icon"><i class="fa-solid fa-feather"></i></div>
+                            <h2>No chat selected</h2>
+                            <p>Choose a conversation from the list to get started, or create a new one.</p>
+                            <button class="btn-primary" id="empty-new-chat-btn"
+                                style="margin-top: 24px; max-width: 200px;">New Chat</button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Container -->
+                    <div id="active-chat-container"
+                        style="display: none; flex-grow: 1; flex-direction: column; overflow: hidden;">
+                        <div class="chat-header">
+                            <div class="chat-header-left">
+                                <button id="toggle-chat-sidebar-btn" title="Toggle chat list">
+                                    <i class="fa-solid fa-bars"></i>
+                                </button>
+                                <h3 id="active-chat-title">Chat Name</h3>
+                            </div>
+                            <button class="icon-btn" id="chat-options-btn"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i></button>
+
+                            <!-- Context Menu -->
+                            <div class="dropdown" id="chat-dropdown">
+                                <div class="dropdown-item" id="rename-chat-opt"><i class="fa-solid fa-pen"></i> Rename
+                                </div>
+                                <div class="dropdown-item danger" id="delete-chat-opt"><i class="fa-solid fa-trash"></i>
+                                    Delete</div>
+                            </div>
+                        </div>
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- Messages -->
+                        </div>
+                        <!-- Chat Input -->
+                        <form id="chat-input-form" style="padding: 24px; border-top: 1px solid var(--border-color);">
+                            <div
+                                style="max-width: 800px; margin: 0 auto; display: flex; gap: 12px; background: var(--bg-secondary); padding: 8px; border-radius: var(--radius-medium); border: 1px solid var(--border-color);">
+                                <input type="text" id="chat-input-field" placeholder="Message..."
+                                    style="background: transparent; border: none; flex-grow: 1; padding: 12px; box-shadow: none;">
+                                <button type="submit" class="btn-primary" style="width: auto; padding: 0 20px;">
+                                    <i class="fa-solid fa-arrow-up"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Extensions View -->
+            <section id="extensions-view" class="view">
+                <div class="view-container">
+                    <header class="view-header"
+                        style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <h1>Local Extensions</h1>
+                            <p>Enhance your chat experience with custom JavaScript modules.</p>
+                        </div>
+                        <div>
+                            <input type="file" id="ext-upload-input" accept=".js,.zip" style="display: none;">
+                            <button class="btn-primary" id="ext-upload-btn"><i class="fa-solid fa-upload"></i> Upload
+                                Extension</button>
+                        </div>
+                    </header>
+
+                    <div class="extensions-grid" id="extensions-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings View -->
+            <section id="settings-view" class="view">
+                <div class="view-container">
+                    <header class="view-header">
+                        <h1>Settings</h1>
+                        <p>Manage your account and platform preferences.</p>
+                    </header>
+
+                    <div class="settings-grid">
+                        <!-- AI Section -->
+                        <div class="settings-card">
+                            <h3>AI Configuration</h3>
+                            <div id="api-status-card"
+                                style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+                                <div>
+                                    <p id="current-provider-text" style="color: var(--text-primary); font-weight: 600;">
+                                        Provider: <span style="color: var(--accent-primary);">None</span></p>
+                                    <p id="current-model-text"
+                                        style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 4px;">
+                                        Model: <span style="color: var(--text-primary);">None</span></p>
+                                    <p id="api-key-masked" style="font-size: 0.85rem;">Key: ••••••••••••••••</p>
+                                </div>
+                                <button class="btn-primary" id="manage-api-btn"
+                                    style="max-width: 150px; font-size: 0.8rem; padding: 10px;">Manage API Key</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Archived Chats</h3>
+                            <p style="margin-bottom: 20px; font-size: 0.85rem; color: var(--text-secondary);">Items are
+                                kept for 48 hours.</p>
+                            <button class="btn-secondary" id="open-archive-btn" style="padding: 10px;">Open
+                                Archive</button>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Resources</h3>
+                            <p style="margin-bottom: 20px; font-size: 0.85rem; color: var(--text-secondary);">
+                                Documentation and legal terms.</p>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn-secondary" id="open-docs-btn"
+                                    style="padding: 10px; flex: 1;">Docs</button>
+                                <button class="btn-secondary" id="open-tos-btn"
+                                    style="padding: 10px; flex: 1;">TOS</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3>Appearance</h3>
+                            <p style="margin-bottom: 20px; font-size: 0.85rem; color: var(--text-secondary);">Optimized
+                                layouts for different screen sizes.</p>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn-secondary mode-btn active" id="mode-normal-btn"
+                                    style="flex: 1; padding: 10px;">Normal</button>
+                                <button class="btn-secondary mode-btn" id="mode-compact-btn"
+                                    style="flex: 1; padding: 10px;">Compact</button>
+                            </div>
+                        </div>
+                        <div class="settings-card">
+                            <h3>Security Scanner</h3>
+                            <p style="margin-bottom: 20px; font-size: 0.85rem; color: var(--text-secondary);">Choose how
+                                uploaded extensions are analyzed before installation.</p>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn-secondary mode-btn active" id="scan-mode-ai-btn"
+                                    style="flex: 1; padding: 10px;"><i class="fa-solid fa-brain"
+                                        style="margin-right: 6px;"></i> AI Mode</button>
+                                <button class="btn-secondary mode-btn" id="scan-mode-human-btn"
+                                    style="flex: 1; padding: 10px;"><i class="fa-solid fa-code"
+                                        style="margin-right: 6px;"></i> Human Mode</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="danger-section">
+                        <div class="danger-title"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</div>
+                        <div class="danger-action">
+                            <div class="danger-info">
+                                <h4>Wipe All Chats</h4>
+                                <p>Permanently delete all conversation history.</p>
+                            </div>
+                            <button class="btn-danger" id="wipe-chats-btn">Wipe Chats</button>
+                        </div>
+                        <div class="danger-action">
+                            <div class="danger-info">
+                                <h4>Wipe All Data</h4>
+                                <p>Reset everything, including API keys and extensions.</p>
+                            </div>
+                            <button class="btn-danger" id="wipe-all-btn">Wipe All Data</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- API Manager Overlay -->
+    <div id="api-manager-overlay" class="page-overlay">
+        <div class="page-container" style="max-width: 600px;">
+            <header class="page-header">
+                <h2>Manage API Key</h2>
+                <button class="icon-btn close-overlay" data-close="api-manager-overlay" style="font-size: 1.2rem;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </header>
+            <div class="page-content">
+                <p style="margin-bottom: 32px;">Select your preferred AI provider and enter your API key.</p>
+
+                <label>1. Select Provider</label>
+                <div class="provider-grid" id="provider-selector"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px;">
+                    <div class="provider-option" data-provider="chatgpt">
+                        <i class="fa-solid fa-brain"></i> ChatGPT
+                    </div>
+                    <div class="provider-option" data-provider="gemini">
+                        <i class="fa-solid fa-sparkles"></i> Gemini
+                    </div>
+                    <div class="provider-option" data-provider="claude">
+                        <i class="fa-solid fa-ghost"></i> Claude
+                    </div>
+                    <div class="provider-option" data-provider="openrouter">
+                        <i class="fa-solid fa-network-wired"></i> OpenRouter
+                    </div>
+                </div>
+
+                <div id="key-input-section">
+                    <div class="input-group">
+                        <label for="api-key-input">2. Enter API Key</label>
+                        <input type="password" id="api-key-input" placeholder="Paste your key here...">
+                    </div>
+                    <div class="input-group" style="margin-top: 16px;">
+                        <label for="model-id-input">3. Model ID (Optional)</label>
+                        <input type="text" id="model-id-input" placeholder="e.g. gpt-4o, gemini-1.5-pro">
+                    </div>
+                    <button class="btn-primary" id="save-api-config" style="margin-top: 24px;">Bang! Connect
+                        Provider</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="archive-overlay" class="page-overlay">
+        <div class="page-container">
+            <header class="page-header">
+                <h2>Chat Archive</h2>
+                <button class="icon-btn close-overlay" data-close="archive-overlay" style="font-size: 1.2rem;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </header>
+            <div class="archive-list" id="archive-list-container"></div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="overlay">
+        <div class="modal danger">
+            <div class="modal-title" id="confirm-title" style="font-size: 1.5rem;">Delete Chat</div>
+            <p class="modal-desc" id="confirm-desc">Are you sure?</p>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="confirm-cancel">Cancel</button>
+                <button class="btn-primary" id="confirm-proceed"
+                    style="background: var(--accent-danger);">Proceed</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename Modal -->
+    <div id="rename-modal" class="overlay">
+        <div class="modal">
+            <div class="modal-title">Rename Chat</div>
+            <p class="modal-desc">Enter a new name for this conversation.</p>
+            <div class="input-group" style="margin-bottom: 24px;">
+                <input type="text" id="rename-input" placeholder="New name...">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="rename-cancel">Cancel</button>
+                <button class="btn-primary" id="rename-save">Save Name</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feathers Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scrollbar-width: none;
+        }
+
+        *::-webkit-scrollbar {
+            display: none;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg2: #141414;
+            --bg3: #1f1f1f;
+            --accent: #8a2be2;
+            --accent2: #a020f0;
+            --text: #f0f0f0;
+            --text2: #a0a0a0;
+            --text3: #666;
+            --border: #2d2d2d;
+            --radius: 8px;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+        }
+
+        .docs-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Nav */
+        .docs-nav {
+            width: 260px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 32px 0;
+        }
+
+        .docs-nav-header {
+            padding: 0 24px 32px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .docs-nav-section {
+            padding: 8px 24px 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text3);
+            margin-top: 16px;
+        }
+
+        .docs-nav a {
+            display: block;
+            padding: 8px 24px;
+            color: var(--text2);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .docs-nav a:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.04);
+            border-left-color: var(--accent);
+        }
+
+        /* Main Content */
+        .docs-content {
+            flex-grow: 1;
+            max-width: 860px;
+            padding: 64px 72px;
+            margin: 0 auto;
+        }
+
+        .docs-section {
+            margin-bottom: 80px;
+        }
+
+        .docs-section:last-child {
+            margin-bottom: 120px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text) 30%, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            margin-top: 56px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 32px 0 12px;
+            color: var(--accent2);
+        }
+
+        p {
+            color: var(--text2);
+            margin-bottom: 16px;
+            font-size: 0.97rem;
+        }
+
+        ul,
+        ol {
+            color: var(--text2);
+            padding-left: 24px;
+            margin-bottom: 16px;
+            font-size: 0.97rem;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.88em;
+            color: var(--accent2);
+        }
+
+        pre {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: #ccc;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(138, 43, 226, 0.15);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            color: var(--accent2);
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .callout {
+            background: rgba(138, 43, 226, 0.07);
+            border: 1px solid rgba(138, 43, 226, 0.25);
+            border-left: 4px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+
+        .callout p {
+            margin: 0;
+            color: var(--text);
+        }
+
+        .callout-warn {
+            background: rgba(255, 77, 77, 0.07);
+            border-color: rgba(255, 77, 77, 0.4);
+            border-left-color: #ff4d4d;
+        }
+
+        .callout-warn p {
+            color: #ffaaaa;
+        }
+
+        .step-list {
+            counter-reset: steps;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-list li {
+            counter-increment: steps;
+            padding-left: 52px;
+            position: relative;
+            margin-bottom: 16px;
+            color: var(--text2);
+        }
+
+        .step-list li::before {
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background: rgba(138, 43, 226, 0.15);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent2);
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .api-method {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+
+        .api-method-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--accent2);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .api-method p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .code-container {
+            position: relative;
+            margin: 24px 0;
+        }
+
+        .code-container pre {
+            margin: 0;
+            padding-top: 44px;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text2);
+            border-radius: 4px;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .copy-code-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .tag {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            color: var(--text2);
+            font-family: monospace;
+        }
+
+        @media (max-width: 768px) {
+            .docs-nav {
+                display: none;
+            }
+
+            .docs-content {
+                padding: 40px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="docs-layout">
+        <!-- Sidebar Nav -->
+        <nav class="docs-nav">
+            <div class="docs-nav-header">
+                <i class="fa-solid fa-feather-pointed"></i> Feathers
+            </div>
+
+            <div class="docs-nav-section">Getting Started</div>
+            <a href="#overview">Overview</a>
+            <a href="#api-setup">API Setup</a>
+            <a href="#model-selection">Model Selection</a>
+
+            <div class="docs-nav-section">Using Feathers</div>
+            <a href="#chat">Chat</a>
+            <a href="#sidebar">Navigation</a>
+            <a href="#archive">Archive</a>
+            <a href="#settings">Settings</a>
+            <a href="#fallback">Fallback Mode</a>
+
+            <div class="docs-nav-section">Extensions: Basics</div>
+            <a href="#ext-overview">Overview</a>
+            <a href="#ext-api">Extension API</a>
+            <a href="#ext-manifest">Manifest &amp; Permissions</a>
+
+            <div class="docs-nav-section">Extensions: AI</div>
+            <a href="#ext-ai">AI Generation API</a>
+            <a href="#ext-ai-blocks">AI Influence Blocks</a>
+
+            <div class="docs-nav-section">Extensions: UI &amp; Styling</div>
+            <a href="#ext-ui-helpers">UI Helpers API</a>
+            <a href="#ext-tabs">Custom Tabs API</a>
+            <a href="#ext-freedom">Custom Styling &amp; UI Freedom</a>
+            <a href="#ext-ui">UI Injection</a>
+            <a href="#ext-style">Style Overrides</a>
+
+            <div class="docs-nav-section">Extensions: Advanced</div>
+            <a href="#ext-hooks">Event Hooks</a>
+            <a href="#ext-example">Full Example</a>
+
+            <div class="docs-nav-section">Extensions: Guides</div>
+            <a href="#ext-generate">Generate with AI</a>
+            <a href="#ext-publish">Publishing</a>
+            <a href="#ext-source">Source Format</a>
+        </nav>
+
+        <!-- Content -->
+        <main class="docs-content">
+            <!-- Overview -->
+            <section class="docs-section" id="overview">
+                <h1>Feathers Documentation</h1>
+                <p>Feathers is an open, modular AI chat platform built for power users and community builders. It brings
+                    together multiple AI providers, a clean interface, and a deeply extensible architecture — so you can
+                    build the AI workflow that fits you.</p>
+
+                <h2>What makes Feathers different?</h2>
+                <ul>
+                    <li><strong>Multi-provider</strong> — Switch freely between Gemini, ChatGPT (OpenAI), Claude, and
+                        OpenRouter.</li>
+                    <li><strong>Model-level control</strong> — Specify any model ID for any provider (e.g.
+                        <code>gemini-1.5-pro</code>, <code>gpt-4o</code>, <code>anthropic/claude-3-haiku</code>).
+                    </li>
+                    <li><strong>Local-first</strong> — All your data stays in your browser. No accounts, no servers.
+                    </li>
+                    <li><strong>Infinitely extensible</strong> — Extensions can change everything: AI behavior, UI
+                        elements, tabs, styles, and more.</li>
+                </ul>
+            </section>
+
+            <!-- API Setup -->
+            <section class="docs-section" id="api-setup">
+                <h2>API Setup</h2>
+                <p>Feathers connects directly to AI providers from your browser. You'll need an API key from your chosen
+                    provider.</p>
+
+                <ol class="step-list">
+                    <li>Open <strong>Settings</strong> from the sidebar.</li>
+                    <li>Click <strong>Manage API Key</strong> in the AI Configuration card.</li>
+                    <li>Select your provider (Gemini, ChatGPT, Claude, or OpenRouter).</li>
+                    <li>Paste your API key into the input field.</li>
+                    <li>Optionally enter a Model ID to use a specific model.</li>
+                    <li>Click <strong>Bang! Connect Provider</strong> to save.</li>
+                </ol>
+
+                <div class="callout-warn callout">
+                    <p><i class="fa-solid fa-triangle-exclamation"></i> &nbsp; API keys are stored locally in your
+                        browser's <code>localStorage</code>. Never share your browser profile with others if you have
+                        keys stored.</p>
+                </div>
+
+                <h3>Provider API Key Sources</h3>
+                <ul>
+                    <li><strong>Gemini</strong> — <a href="https://aistudio.google.com/app/apikey" target="_blank"
+                            style="color:var(--accent2)">Google AI Studio</a></li>
+                    <li><strong>ChatGPT</strong> — <a href="https://platform.openai.com/api-keys" target="_blank"
+                            style="color:var(--accent2)">OpenAI Platform</a></li>
+                    <li><strong>Claude</strong> — <a href="https://console.anthropic.com/settings/keys" target="_blank"
+                            style="color:var(--accent2)">Anthropic Console</a></li>
+                    <li><strong>OpenRouter</strong> — <a href="https://openrouter.ai/keys" target="_blank"
+                            style="color:var(--accent2)">OpenRouter Dashboard</a></li>
+                </ul>
+            </section>
+
+            <!-- Model Selection -->
+            <section class="docs-section" id="model-selection">
+                <h2>Model Selection</h2>
+                <p>Feathers lets you specify any model ID for any provider. This gives you fine-grained control over
+                    cost, speed, and capability.</p>
+
+                <h3>Example Model IDs</h3>
+                <div class="tag-row">
+                    <span class="tag">gemini-1.5-flash</span>
+                    <span class="tag">gemini-1.5-pro</span>
+                    <span class="tag">gemini-2.0-flash</span>
+                    <span class="tag">gpt-4o</span>
+                    <span class="tag">gpt-4o-mini</span>
+                    <span class="tag">gpt-3.5-turbo</span>
+                    <span class="tag">anthropic/claude-3-haiku</span>
+                    <span class="tag">openai/gpt-4o</span>
+                    <span class="tag">deepseek/deepseek-chat</span>
+                    <span class="tag">meta-llama/llama-3.1-70b-instruct</span>
+                </div>
+
+                <p>If you leave the Model ID blank, Feathers uses a sensible default for the selected provider.</p>
+            </section>
+
+            <!-- Chat -->
+            <section class="docs-section" id="chat">
+                <h2>Using Chat</h2>
+                <p>The Chat view is the heart of Feathers. It gives you a list of all your conversations on the left,
+                    and the active conversation on the right.</p>
+
+                <h3>Creating a chat</h3>
+                <p>Click the <code>+</code> button at the top of the chat list, or the <strong>New Chat</strong> button
+                    in the empty state.</p>
+
+                <h3>Renaming a chat</h3>
+                <p>Open a chat, then click the <code>⋮</code> icon in the top right corner and select
+                    <strong>Rename</strong>. A modal will appear — type a new name and press Enter or click Save.
+                </p>
+
+                <h3>Deleting a chat</h3>
+                <p>Click <code>⋮</code> → <strong>Delete</strong>. You'll be asked to confirm. The chat moves to the
+                    <strong>Archive</strong> for 48 hours before being permanently removed.
+                </p>
+
+                <h3>Message formatting</h3>
+                <p>AI responses support basic Markdown:</p>
+                <ul>
+                    <li><code>**bold**</code> renders as <strong>bold</strong></li>
+                    <li><code>*italic*</code> renders as <em>italic</em></li>
+                    <li>Backtick-wrapped text renders as <code>inline code</code></li>
+                    <li>Triple-backtick blocks render as multi-line code blocks</li>
+                </ul>
+            </section>
+
+            <!-- Sidebar -->
+            <section class="docs-section" id="sidebar">
+                <h2>Navigation</h2>
+                <p>The main sidebar on the left lets you switch between <strong>Chat</strong>,
+                    <strong>Extensions</strong>, and <strong>Settings</strong>. You can collapse it using the arrow
+                    button — the icons remain visible for quick navigation.
+                </p>
+                <p>In the Chat view, a secondary sidebar lists all your conversations. You can collapse it using the
+                    <code>&lt;</code> button. A hamburger icon in the chat header lets you re-open it at any time.
+                </p>
+            </section>
+
+            <!-- Archive -->
+            <section class="docs-section" id="archive">
+                <h2>Archive</h2>
+                <p>Deleted chats aren't gone immediately. They move to the Archive, where they remain for <strong>48
+                        hours</strong>. To access the archive:</p>
+                <ol class="step-list">
+                    <li>Go to <strong>Settings</strong>.</li>
+                    <li>Click <strong>Open Archive</strong> in the Archived Chats card.</li>
+                    <li>Click <strong>Restore</strong> next to any chat to bring it back.</li>
+                </ol>
+                <p>After 48 hours, archived chats are permanently removed and cannot be recovered.</p>
+            </section>
+
+            <!-- Settings -->
+            <section class="docs-section" id="settings">
+                <h2>Settings Reference</h2>
+                <ul>
+                    <li><strong>AI Configuration</strong> — View current provider and model. Access key management.</li>
+                    <li><strong>Archived Chats</strong> — Access the 48-hour archive for recently deleted chats.</li>
+                    <li><strong>Resources</strong> — Links to documentation and terms of service.</li>
+                    <li><strong>Appearance</strong> — Toggle between Normal and Compact mode. Compact mode increases all
+                        touch targets and font sizes for tablet use.</li>
+                    <li><strong>Danger Zone</strong> — Wipe all chats (recoverable via archive) or wipe all data
+                        (irreversible).</li>
+                </ul>
+            </section>
+
+            <!-- Fallback Mode -->
+            <section class="docs-section" id="fallback">
+                <h2>Fallback Mode</h2>
+                <p>Fallback Mode is an emergency safety tool. When an extension breaks the UI or behaves maliciously,
+                    you can instantly suspend all extensions and enter a completely isolated manager to diagnose and
+                    disable the problem.</p>
+
+                <div class="callout-warn callout">
+                    <p><i class="fa-solid fa-triangle-exclamation"></i> &nbsp; Fallback Mode is <strong>fully
+                            isolated</strong> — it uses a closed Shadow DOM and raw monospace styles with no dependency
+                        on app CSS or any extension code. Extensions cannot override it, style it, or prevent it from
+                        activating.</p>
+                </div>
+
+                <h3>How to Enter Fallback Mode</h3>
+                <p><strong>Desktop:</strong> Press <kbd
+                        style="background:var(--bg-tertiary);padding:3px 8px;border-radius:4px;border:1px solid var(--border-color);font-family:monospace;">Ctrl
+                        + Shift + D</kbd> at any time. The shortcut is registered before any extension code runs, in the
+                    browser's capture phase, and calls <code>stopImmediatePropagation()</code> — meaning no extension
+                    can prevent it from firing.</p>
+
+                <p><strong>Mobile / No Keyboard:</strong> Append <code>?fallback</code> to your Feathers URL directly in
+                    the address bar and reload the page:</p>
+                <pre>http://localhost:3000/?fallback
+http://your-feathers-url/?fallback</pre>
+                <p>Fallback Mode will activate automatically on load. To exit, click <strong>Exit Without
+                        Saving</strong> or <strong>Save &amp; Exit Fallback</strong> — the <code>?fallback</code>
+                    parameter is automatically cleaned from the URL when you exit.</p>
+
+                <h3>What Fallback Mode does</h3>
+                <ul>
+                    <li>Immediately removes all injected extension scripts from the page</li>
+                    <li>Clears all active AI prompt blocks and event hooks</li>
+                    <li>Removes any custom tabs added by extensions from the sidebar</li>
+                    <li>Renders a <strong>closed Shadow DOM</strong> panel — no app CSS, no extension CSS, completely
+                        self-contained</li>
+                    <li>Does <strong>not</strong> affect your chat history, API keys, or other settings</li>
+                </ul>
+
+                <h3>Managing Extensions in Fallback Mode</h3>
+                <p>Fallback Mode shows every installed extension as a checkbox. Uncheck any extension you want to
+                    disable, then click <strong>Save &amp; Exit Fallback</strong> — the enabled/disabled state is saved
+                    to <code>localStorage</code> and persists when normal mode resumes.</p>
+                <p>Clicking <strong>Exit Without Saving</strong> or pressing <kbd
+                        style="background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;border:1px solid var(--border-color);font-family:monospace;">Ctrl+Shift+D</kbd>
+                    again exits without changing extension states.</p>
+
+                <h3>Session &amp; Persistence</h3>
+                <p>Fallback Mode is <strong>session-only</strong>. It is tracked in <code>sessionStorage</code> —
+                    refreshing or closing the tab always returns Feathers to normal mode. This is intentional: if an
+                    extension is so broken it prevents the keyboard shortcut from registering, simply refresh the page
+                    and immediately press <kbd
+                        style="background:var(--bg-tertiary);padding:2px 6px;border-radius:4px;border:1px solid var(--border-color);font-family:monospace;">Ctrl+Shift+D</kbd>
+                    (or add <code>?fallback</code> to the URL) before the broken extension has a chance to load.</p>
+
+                <h3>Technical Isolation Details</h3>
+                <ul>
+                    <li>The Fallback Mode host element is appended to <code>&lt;html&gt;</code> (not
+                        <code>&lt;body&gt;</code>), so even full-page body overlays from extensions don't cover it
+                    </li>
+                    <li>The shadow root is created with <code>mode: 'closed'</code> — extensions cannot access it via
+                        <code>document.querySelector</code>
+                    </li>
+                    <li>All styles inside the shadow root are scoped and self-contained — no Feathers CSS variables, no
+                        extension styles</li>
+                    <li>The keyboard shortcut is defined and registered synchronously before
+                        <code>window.feathers</code> is set up, so it is always the first capture-phase listener on the
+                        document
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Extensions Overview -->
+            <section class="docs-section" id="ext-overview">
+                <h2>Extensions Overview</h2>
+                <p>The Feathers Extensions System gives developers complete control over the platform. An extension is a
+                    JavaScript file that registers itself with Feathers and can then manipulate almost every aspect of
+                    the application — from AI behavior to UI layout to new functionality.</p>
+
+                <div class="callout">
+                    <p>Extensions are designed to be <strong>maximally flexible</strong>. They run in the same context
+                        as the app, giving them access to all Feathers APIs. This power comes with a responsibility to
+                        build trustworthy extensions.</p>
+                </div>
+
+                <h3>What extensions can do</h3>
+                <ul>
+                    <li>Inject system-level context blocks into AI conversations</li>
+                    <li>Replace or augment the UI with new elements, buttons, panels</li>
+                    <li>Add entirely new tabs to the sidebar navigation</li>
+                    <li>Reorder or hide existing tabs</li>
+                    <li>Override CSS styles across the entire application</li>
+                    <li>Listen to application events (messages sent, chats created, etc.)</li>
+                    <li>Store their own persistent state via <code>localStorage</code></li>
+                    <li>Call external APIs and integrate third-party services</li>
+                </ul>
+            </section>
+
+            <!-- Extension API -->
+            <section class="docs-section" id="ext-api">
+                <h2>Extension API <span class="badge">Planned</span></h2>
+                <p>The <code>feathers</code> global object is the gateway to all extension capabilities. Extensions are
+                    loaded by placing a <code>.js</code> file in the <code>extensions/</code> directory (or via the
+                    Marketplace in future).</p>
+
+                <h3>Registering an Extension</h3>
+                <p>Every extension must call <code>feathers.register()</code> first. This declares the extension
+                    metadata and activates it.</p>
+                <pre>feathers.register({
+  id: 'my-cool-extension',
+  name: 'My Cool Extension',
+  version: '1.0.0',
+  author: 'yourname',
+  description: 'Does something awesome.',
+
+  // (Optional) Settings UI — shown when user clicks the gear icon.
+  // Runs whether or not the extension is enabled.
+  settings(api) {
+    // Build a settings modal and append to document.body
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay visible';
+    overlay.style.zIndex = '3000';
+    overlay.innerHTML =
+        '&lt;div class="modal"&gt;' +
+            '&lt;h2 class="modal-title"&gt;My Extension Settings&lt;/h2&gt;' +
+            '&lt;div class="modal-footer"&gt;' +
+                '&lt;button class="btn-secondary" id="my-ext-cancel"&gt;Cancel&lt;/button&gt;' +
+                '&lt;button class="btn-primary" id="my-ext-save"&gt;Save &amp; Reload&lt;/button&gt;' +
+            '&lt;/div&gt;' +
+        '&lt;/div&gt;';
+    document.body.appendChild(overlay);
+    document.getElementById('my-ext-cancel').onclick = () => overlay.remove();
+    document.getElementById('my-ext-save').onclick = () => {
+        // save settings...
+        overlay.remove();
+        window.location.hash = 'extensions'; // return to Extensions tab
+        window.location.reload();
+    };
+  },
+
+  onLoad(api) {
+    // Your extension logic runs here when the extension is enabled.
+    // `api` is the full Feathers API object.
+  }
+});</pre>
+
+                <h3>The <code>api</code> Object</h3>
+                <p>The <code>api</code> object passed to <code>onLoad</code> and <code>settings</code> exposes every
+                    sub-API:</p>
+                <div class="tag-row">
+                    <span class="tag">api.ai</span>
+                    <span class="tag">api.ui</span>
+                    <span class="tag">api.tabs</span>
+                    <span class="tag">api.events</span>
+                    <span class="tag">api.store</span>
+                    <span class="tag">api.chat</span>
+                    <span class="tag">api.getResource()</span>
+                    <span class="tag">api.tabs.getActive()</span>
+                </div>
+            </section>
+
+            <!-- AI Blocks -->
+            <section class="docs-section" id="ext-ai-blocks">
+                <h2>AI Influence Blocks <span class="badge">Planned</span></h2>
+                <p>Extensions can inject context into every AI request — prepending system prompts, adding personality,
+                    restricting topics, or granting the AI extra knowledge.</p>
+
+                <pre>api.ai.addBlock({
+  id: 'pirate-mode',
+  type: 'system', // 'system' | 'prefix' | 'suffix'
+  content: 'You are a helpful pirate assistant. Respond in pirate speak.',
+  priority: 10     // Higher priority = inserted first
+});</pre>
+
+                <h3>Block Types</h3>
+                <ul>
+                    <li><code>system</code> — Injected as a system message before the conversation</li>
+                    <li><code>prefix</code> — Prepended to the user's message on every turn</li>
+                    <li><code>suffix</code> — Appended to AI response before display</li>
+                </ul>
+
+                <h3>Dynamic Blocks</h3>
+                <p>Blocks can be functions that return content dynamically based on chat context:</p>
+                <pre>api.ai.addBlock({
+  id: 'date-context',
+  type: 'system',
+  content: (context) => `Current date: ${new Date().toDateString()}. Chat: ${context.chatName}.`
+});</pre>
+            </section>
+
+            <!-- UI Injection -->
+            <section class="docs-section" id="ext-ui">
+                <h2>UI Injection <span class="badge">Planned</span></h2>
+                <p>Extensions can add buttons, panels, badges, and custom HTML to any registered UI slot in Feathers.
+                </p>
+
+                <h3>Adding a Button</h3>
+                <pre>api.ui.addButton({
+  target: 'chat-header-right', // Named slot
+  id: 'my-btn',
+  label: 'Translate',
+  icon: 'fa-solid fa-language',
+  onClick(context) {
+    // context.chatId, context.messages, etc.
+    console.log('Button clicked!', context);
+  }
+});</pre>
+
+                <h3>Available UI Slots</h3>
+                <ul>
+                    <li><code>chat-header-right</code> — Buttons in the top-right of a chat</li>
+                    <li><code>chat-header-left</code> — Buttons next to the chat title</li>
+                    <li><code>chat-message-actions</code> — Per-message action icons</li>
+                    <li><code>sidebar-bottom</code> — Item at the bottom of the main sidebar</li>
+                    <li><code>settings-card</code> — A full card in the Settings grid</li>
+                    <li><code>chat-input-above</code> — Element above the message input</li>
+                </ul>
+
+                <h3>Adding a Panel</h3>
+                <p>Extensions can render rich HTML into a named panel or overlay:</p>
+                <pre>api.ui.addPanel({
+  id: 'my-panel',
+  title: 'Translator',
+  render() {
+    return `&lt;div class="my-panel"&gt;
+      &lt;p&gt;Translate the last message to Spanish.&lt;/p&gt;
+      &lt;button onclick="myExtension.translate()"&gt;Go&lt;/button&gt;
+    &lt;/div&gt;`;
+  }
+});</pre>
+            </section>
+
+            </section>
+
+            <!-- AI API -->
+            <section class="docs-section" id="ext-ai">
+                <h2>AI Generation API</h2>
+                <p>Extensions can directly generate responses using the user's currently selected AI provider and API
+                    key. You do not need to ask the user for their keys or write your own <code>fetch</code> logic.</p>
+
+                <h3><code>api.ai.generate(systemPrompt, userPrompt, [history])</code></h3>
+                <p>An async function that returns the generated text.</p>
+
+                <pre>// Example: A button that summarizes the chat
+api.ui.addButton({
+  target: 'chat-header-right',
+  id: 'summarize-btn',
+  label: 'Summarize',
+  icon: 'fa-solid fa-compress',
+  async onClick(context) {
+    api.ui.showToast('Summarizing chat...', 'info');
+    try {
+      // Pass the existing active chat history directly
+      const summary = await api.ai.generate(
+        'You are a summarization tool.',
+        'Summarize this entire conversation in 3 bullet points.',
+        context.messages
+      );
+      
+      api.ui.createModal({
+        title: 'Chat Summary',
+        icon: 'fa-compress',
+        contentHtml: '&lt;pre style="white-space:pre-wrap;font-family:inherit;"&gt;' + summary + '&lt;/pre&gt;',
+        cancelText: 'Close'
+      });
+    } catch (err) {
+      api.ui.showToast('Error: ' + err.message, 'error');
+    }
+  }
+});</pre>
+
+                <ul>
+                    <li><code>systemPrompt</code> <em>(string)</em> — The system instructions for this specific
+                        generation.</li>
+                    <li><code>userPrompt</code> <em>(string)</em> — The main prompt text.</li>
+                    <li><code>history</code> <em>(array, optional)</em> — Array of previous message objects
+                        <code>{role: 'user'|'ai', content: '...'}</code> to provide context.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- UI Helpers API -->
+            <section class="docs-section" id="ext-ui-helpers">
+                <h2>UI Helpers API</h2>
+                <p>Feathers provides clean, native-looking UI helpers so you don't have to write raw HTML overlays or
+                    CSS.</p>
+
+                <h3><code>api.ui.showToast(message, type)</code></h3>
+                <p>Displays a temporary popup notification in the bottom right corner.</p>
+                <pre>api.ui.showToast('Settings saved successfully!', 'success');
+api.ui.showToast('Something went wrong.', 'error');
+api.ui.showToast('Generating response...', 'info'); // 'info' is default</pre>
+
+                <h3><code>api.ui.createModal(options)</code></h3>
+                <p>Creates a centered native Feathers modal overlay. Returns the DOM element.</p>
+                <pre>api.ui.createModal({
+  title: 'Confirm Deletion',
+  description: 'Are you absolutely sure?', // Optional
+  icon: 'fa-trash', // FontAwesome class without the 'fa-solid' part
+  contentHtml: '&lt;p&gt;This action cannot be undone.&lt;/p&gt;', // Optional inner HTML
+  saveText: 'Delete', // Defaults to 'Save'
+  cancelText: 'Cancel', // Omit 'onCancel' entirely to not show a cancel button
+  onSave: () => {
+    console.log('Deleted');
+    // Return false if you want to prevent the modal from closing automatically
+  },
+  onCancel: () => {
+    console.log('Cancelled');
+  }
+});</pre>
+            </section>
+
+            <!-- Tab Management -->
+            <section class="docs-section" id="ext-tabs">
+                <h2>Custom Tabs API</h2>
+                <p>Extensions can add entirely new tabs to the Feathers sidebar. When enabled, the tab appears
+                    alongside
+                    Chat, Extensions, and Settings, and renders your custom UI in the main content area.</p>
+
+                <h3>Tracking the Active Tab</h3>
+                <p>You can programmatically determine which tab the user is currently viewing:</p>
+                <pre>const activeTabId = api.tabs.getActive();
+// Returns something like 'chat-view', 'extensions-view', or 'ext-tab-my-tool'</pre>
+
+                <p>You can also listen for tab changes in real-time using the events API:</p>
+                <pre>api.events.on('view:changed', (viewId) => {
+  if (viewId === 'chat-view') {
+    console.log('User switched to chat mode!');
+  }
+});</pre>
+
+                <h3>Adding a Tab</h3>
+                <p>Call <code>api.tabs.add()</code> inside your <code>onLoad</code> function:</p>
+                <pre>api.tabs.add({
+  id: 'my-tab',           // Unique tab ID (no spaces)
+  title: 'My Tool',       // Label shown in the sidebar
+  icon: 'fa-solid fa-star', // Any Font Awesome icon class
+  render: (container) => {
+    // container is a &lt;section&gt; element filling the main view.
+    // Build your full UI inside it.
+    container.innerHTML =
+        '&lt;div class="view-header"&gt;' +
+            '&lt;h2&gt;My Tool&lt;/h2&gt;' +
+        '&lt;/div&gt;' +
+        '&lt;div style="padding: 24px;"&gt;Content goes here.&lt;/div&gt;';
+  }
+});</pre>
+
+                <div class="callout">
+                    <p><strong>Tip:</strong> The tab only appears in the sidebar when the extension is
+                        <strong>enabled</strong>. The container element is created and wired up immediately after
+                        <code>api.tabs.add()</code> is called, so your <code>render</code> function can also attach
+                        event listeners and update the DOM dynamically from event hooks.
+                    </p>
+                </div>
+
+                <h3>Config Options</h3>
+                <ul>
+                    <li><code>id</code> <em>(string, required)</em> — Unique identifier. The DOM element will get
+                        the id
+                        <code>ext-tab-{id}</code>.
+                    </li>
+                    <li><code>title</code> <em>(string, required)</em> — Label shown in the sidebar nav.</li>
+                    <li><code>icon</code> <em>(string)</em> — Font Awesome class string (e.g.
+                        <code>fa-solid fa-chart-line</code>). Defaults to a puzzle piece.
+                    </li>
+                    <li><code>render</code> <em>(function)</em> — Called with the container element. Use it to
+                        inject
+                        HTML and attach listeners.</li>
+                    <li><code>contentHtml</code> <em>(string)</em> — Alternative to <code>render</code>. Set raw
+                        HTML
+                        directly.</li>
+                </ul>
+
+                <h3>Live Example: Develops Extension</h3>
+                <p>The built-in <strong>Develops</strong> plugin uses this API to create an AI Stats dashboard that
+                    logs
+                    latency and token counts for every message.</p>
+            </section>
+
+            <!-- Custom Styling & UI Freedom -->
+            <section class="docs-section" id="ext-freedom">
+                <h2>Custom Styling &amp; UI Freedom</h2>
+                <p>When you create a custom tab via <code>api.tabs.add()</code>, you are granted complete <strong>UI
+                        freedom</strong>. The <code>container</code> element provided is a blank canvas. You can inject
+                    whatever HTML, CSS, and interactive JS you want as long as everything is self-contained within your
+                    extension script.</p>
+
+                <h3>1. Total Control</h3>
+                <p>You do not have to follow the Feathers design system. If you want to build a completely unique tool
+                    with custom animations, custom flex layouts, and custom colors, you can do so by injecting inline
+                    <code>&lt;style&gt;</code> tags into your container, or simply applying raw CSS.
+                </p>
+
+                <h3>2. Matching the Native Look</h3>
+                <p>If you <em>do</em> want your extension to look exactly like the rest of Feathers, you can leverage
+                    our heavily standardized CSS variables and classes. Because your extension lives in the same DOM,
+                    you get access to all of them automatically.</p>
+
+                <h4>Useful Native CSS Classes</h4>
+                <ul>
+                    <li><code>.view-header</code> — The standard top sticky header structure</li>
+                    <li><code>btn-primary</code> — The purple filled main button</li>
+                    <li><code>btn-secondary</code> — The outline ghost button</li>
+                    <li><code>icon-btn</code> — Clean icon-only button hover states</li>
+                    <li><code>empty-state</code> — Centered placeholder container</li>
+                </ul>
+
+                <h4>Useful Native CSS Variables</h4>
+                <p>Use these for inline styles to flawlessly match the user's Dark/Light mode theme.</p>
+                <ul>
+                    <li><code>var(--bg-primary)</code> — The absolute darkest background (usually external borders or
+                        sidebars)</li>
+                    <li><code>var(--bg-secondary)</code> — Main content workspace background</li>
+                    <li><code>var(--bg-tertiary)</code> — Card and grouped item backgrounds</li>
+                    <li><code>var(--text)</code>, <code>var(--text-secondary)</code>, <code>var(--text-muted)</code> —
+                        Foreground colors</li>
+                    <li><code>var(--accent-primary)</code> — The brand purple</li>
+                    <li><code>var(--border-color)</code> — Subtle divider lines</li>
+                </ul>
+
+                <pre><code>// Example: Building a native-matching view from scratch
+api.tabs.add({
+  id: 'native-example',
+  title: 'Native Look',
+  render: (container) =&gt; {
+    container.innerHTML =
+      '&lt;div class="view-header"&gt;' +
+        '&lt;h2&gt;Matching UI&lt;/h2&gt;' +
+      '&lt;/div&gt;' +
+      '&lt;div style="padding: 24px;"&gt;' +
+        '&lt;div style="background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px;"&gt;' +
+           '&lt;h3 style="color: var(--text);"&gt;Native Card&lt;/h3&gt;' +
+           '&lt;p style="color: var(--text-secondary);"&gt;This blends in perfectly.&lt;/p&gt;' +
+           '&lt;button class="btn-primary" style="margin-top: 16px;"&gt;Action&lt;/button&gt;' +
+        '&lt;/div&gt;' +
+      '&lt;/div&gt;';
+  }
+});</code></pre>
+            </section>
+
+            <!-- Style Overrides -->
+            <section class="docs-section" id="ext-style">
+                <h2>Style Overrides <span class="badge">Planned</span></h2>
+                <p>Extensions can inject any CSS into the application. This enables complete visual themes,
+                    animations,
+                    or targeted UI changes.</p>
+
+                <pre>api.ui.addStyle(`
+  :root {
+    --accent-primary: #00d4aa;
+    --bg-primary: #020c18;
+  }
+
+  .message.ai {
+    border-left: 3px solid var(--accent-primary);
+    border-radius: 0 12px 12px 0;
+  }
+
+  .nav-item.active {
+    background: rgba(0, 212, 170, 0.1);
+  }
+`, { id: 'ocean-theme' });</pre>
+
+                <div class="callout">
+                    <p>Styles are scoped by an ID so they can be cleanly removed on extension unload.</p>
+                </div>
+            </section>
+
+            <!-- Event Hooks -->
+            <section class="docs-section" id="ext-hooks">
+                <h2>Event Hooks <span class="badge">Planned</span></h2>
+                <p>The events API lets extensions react to things happening in Feathers.</p>
+
+                <pre>// Listen to an event
+api.events.on('message:sent', (data) => {
+  console.log('User sent:', data.content);
+});
+
+api.events.on('message:received', (data) => {
+  console.log('AI replied:', data.content, 'in chat', data.chatId);
+});
+
+api.events.on('chat:created', (chat) => {
+  console.log('New chat:', chat.name);
+});
+
+api.events.on('chat:deleted', (chat) => {
+  console.log('Chat deleted:', chat.id);
+});
+
+// Intercept and modify a message before it's sent
+api.events.intercept('message:before-send', (data, next) => {
+  data.content = data.content + ' [sent via My Extension]';
+  next(data);
+});</pre>
+
+                <h3>Available Events</h3>
+                <ul>
+                    <li><code>message:sent</code> — User sends a message</li>
+                    <li><code>message:received</code> — AI returns a response</li>
+                    <li><code>message:before-send</code> — Interceptable: fired just before API call</li>
+                    <li><code>chat:created</code> — A new chat is created</li>
+                    <li><code>chat:deleted</code> — A chat is moved to archive</li>
+                    <li><code>chat:renamed</code> — A chat is renamed</li>
+                    <li><code>provider:changed</code> — User switches AI provider</li>
+                    <li><code>view:changed</code> — User navigates to a different view</li>
+                    <li><code>theme:changed</code> — Fired when app switches mode (e.g. 'compact' or 'normal')</li>
+                </ul>
+
+                <h3>Chat API</h3>
+                <p>Extensions can actively read the current conversation context at any time using
+                    <code>api.chat</code>.
+                </p>
+                <ul>
+                    <li><code>api.chat.getActive()</code> — Returns <code>{ id, name }</code> of the current chat, or
+                        null.</li>
+                    <li><code>api.chat.getHistory(chatId)</code> — Returns the array of message objects. If `chatId` is
+                        omitted, returns the active chat's history.</li>
+                </ul>
+            </section>
+
+            <!-- Manifest -->
+            <section class="docs-section" id="ext-manifest">
+                <h2>Extension Configuration & Folders</h2>
+                <p>Extensions can be simple `.js` files calling `feathers.register(...)`, or full <strong>Packaged
+                        `.zip` Extensions</strong> containing multiple assets (HTML, CSS, images).</p>
+
+                <h3>Packaged Extensions (ZIP)</h3>
+                <p>To bundle an extension, zip your folder. It <strong>must</strong> contain a
+                    <code>manifest.json</code> in the root:
+                </p>
+                <pre>{
+  "id": "my-cool-extension",
+  "name": "My Cool Extension",
+  "version": "1.0.0",
+  "author": "yourname",
+  "description": "A short description of what this does.",
+  "main": "script.js" 
+}</pre>
+
+                <p>Your main script (e.g., `script.js`) works exactly the same as a single-file extension. Any other
+                    resources in the zip (images, css files, layout templates) are automatically converted to Base64 and
+                    accessible via <code>api.getResource('styles/theme.css')</code>.</p>
+
+                <h3>Permissions <span class="badge">Planned</span></h3>
+                "id": "my-cool-extension",
+                "name": "My Cool Extension",
+                "version": "1.0.0",
+                "author": "yourname",
+                "description": "A short description of what this does.",
+                "icon": "fa-solid fa-star",
+                "main": "index.js",
+                "permissions": [
+                "ai.blocks",
+                "ui.inject",
+                "tabs.manage",
+                "style.inject",
+                "events.read",
+                "events.intercept",
+                "store.read",
+                "store.write"
+                ],
+                "feathersVersion": ">=1.0.0"
+                }</pre>
+
+                <h3>Permissions</h3>
+                <p>Extensions must declare what permissions they need. Users will see this list when installing.</p>
+                <ul>
+                    <li><code>ai.blocks</code> — Inject AI context blocks</li>
+                    <li><code>ui.inject</code> — Add buttons, panels, HTML to the UI</li>
+                    <li><code>tabs.manage</code> — Add, reorder, or hide tabs</li>
+                    <li><code>style.inject</code> — Inject CSS</li>
+                    <li><code>events.read</code> — Listen to app events</li>
+                    <li><code>events.intercept</code> — Intercept and modify events</li>
+                    <li><code>store.read</code> / <code>store.write</code> — Read/write persistent extension storage
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Full Example -->
+            <section class="docs-section" id="ext-example">
+                <h2>Full Extension Example</h2>
+                <p>Here's a complete extension that adds a word count badge to every AI message:</p>
+                <pre>feathers.register({
+  id: 'word-counter',
+  name: 'Word Counter',
+  version: '1.0.0',
+  author: 'feathers-community',
+  description: 'Adds a word count to every AI message.',
+
+  onLoad(api) {
+    // Listen for each received message
+    api.events.on('message:received', (data) => {
+      const words = data.content.trim().split(/\s+/).length;
+
+      // Inject a small badge into the message element
+      api.ui.addMessageBadge(data.id, {
+        text: `${words} words`,
+        icon: 'fa-solid fa-font',
+        style: 'subtle'
+      });
+    });
+
+    // Also add a system context block
+    api.ai.addBlock({
+      id: 'word-counter-system',
+      type: 'system',
+      content: 'Try to be concise in your responses when possible.'
+    });
+  },
+
+  onUnload() {
+    // Clean up happens automatically for events and blocks registered via api
+  }
+});</pre>
+            </section>
+
+            <!-- AI Prompt Generator -->
+            <section class="docs-section" id="ext-generate">
+                <h2>Generate Extensions with AI</h2>
+                <p>Don't want to code? You can use an AI like ChatGPT or Claude to write an extension for you!</p>
+                <div style="margin: 24px 0;">
+                    <a href="prompt_template.txt" download="Feathers_Extension_Prompt.txt" class="btn-primary"
+                        style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-download"></i> Download AI Prompt Template
+                    </a>
+                </div>
+                <div class="callout">
+                    <p><strong>Instructions:</strong> Download the text file, open it, and type your idea at the
+                        very
+                        bottom where it says <code>[INSERT YOUR IDEA HERE]</code>. Then paste the entire text into
+                        your
+                        favorite AI chatbot.</p>
+                </div>
+            </section>
+
+            </section>
+
+
+            <!-- Publishing -->
+            <section class="docs-section" id="ext-publish">
+                <h2>Publishing Extensions <span class="badge">Future</span></h2>
+                <p>The Feathers Extensions Marketplace will be powered by community contributions. The planned
+                    publishing flow:</p>
+                <ol class="step-list">
+                    <li>Create your extension with a valid <code>manifest.json</code> and <code>index.js</code>.</li>
+                    <li>Submit a Pull Request to the <strong>Feathers Marketplace Repository</strong> on GitHub.</li>
+                    <li>Pass automated security and permission checks.</li>
+                    <li>Get reviewed by a community maintainer.</li>
+                    <li>Your extension appears in the Feathers Extensions tab for all users.</li>
+                </ol>
+
+                <div class="callout">
+                    <p>The marketplace system is under active development. For now, extensions can be loaded manually by
+                        uploading a <code>.js</code> file directly in the <strong>Extensions</strong> tab.</p>
+                </div>
+            </section>
+
+            <!-- Default Extensions Source Code -->
+            <section class="docs-section" id="ext-source">
+                <h2>Source Code: Default Extensions</h2>
+                <p>Feathers ships with several pre-installed plugins (all <strong>disabled by default</strong>). Here is
+                    their up-to-date source code as a reference for builders — note the use of
+                    modernized template literals for improved modal UI development.
+                </p>
+
+                <h3>1. Personification (v1.1.2)</h3>
+                <pre><code>// personification.js — Feathers Default Extension v1.1.2
+feathers.register({
+    id: 'personification',
+    name: 'Personification',
+    version: '1.1.2',
+    author: 'Feathers Team',
+    description: "Change the AI's personality with presets or custom instructions.",
+    
+    settings(api) {
+        const currentMode = api.store.get('mode') || 'default';
+        const customPrompt = api.store.get('customPrompt') || 'You are a helpful assistant.';
+
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay visible';
+        overlay.style.zIndex = '3000';
+        overlay.innerHTML = `
+            &lt;div class="modal"&gt;
+                &lt;h2 class="modal-title"&gt;Personification Settings&lt;/h2&gt;
+                &lt;p class="modal-desc"&gt;Choose a personality for your AI models.&lt;/p&gt;
+                &lt;div style="margin-bottom: 20px;"&gt;
+                    &lt;label style="display: block; margin-bottom: 8px; color: var(--text-secondary);"&gt;Select Preset:&lt;/label&gt;
+                    &lt;select id="personification-select" style="width: 100%; padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary);"&gt;
+                        &lt;option value="default"&gt;Default&lt;/option&gt;
+                        &lt;option value="pirate"&gt;Pirate&lt;/option&gt;
+                        &lt;option value="yoda"&gt;Yoda&lt;/option&gt;
+                        &lt;option value="sarcastic"&gt;Sarcastic&lt;/option&gt;
+                        &lt;option value="poet"&gt;Poet&lt;/option&gt;
+                        &lt;option value="custom"&gt;Custom&lt;/option&gt;
+                    &lt;/select&gt;
+                &lt;/div&gt;
+                &lt;div id="custom-prompt-container" style="display: none; margin-bottom: 20px;"&gt;
+                    &lt;label style="display: block; margin-bottom: 8px; color: var(--text-secondary);"&gt;Custom Instructions:&lt;/label&gt;
+                    &lt;textarea id="personification-custom" style="width: 100%; height: 100px; padding: 12px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); resize: vertical;"&gt;${customPrompt.replace(/&/g, '&amp;amp;').replace(/&lt;/g, '&amp;lt;')}&lt;/textarea&gt;
+                &lt;/div&gt;
+                &lt;div class="modal-footer"&gt;
+                    &lt;button class="btn-secondary" id="personification-cancel"&gt;Cancel&lt;/button&gt;
+                    &lt;button class="btn-primary" id="personification-save"&gt;Save &amp; Reload&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;`;
+        document.body.appendChild(overlay);
+
+        const selectEl = document.getElementById('personification-select');
+        const customContainer = document.getElementById('custom-prompt-container');
+        const customInput = document.getElementById('personification-custom');
+        
+        selectEl.value = currentMode;
+        if (currentMode === 'custom') customContainer.style.display = 'block';
+        
+        selectEl.onchange = (e) =&gt; {
+            customContainer.style.display = e.target.value === 'custom' ? 'block' : 'none';
+        };
+
+        document.getElementById('personification-cancel').onclick = () =&gt; overlay.remove();
+        document.getElementById('personification-save').onclick = () =&gt; {
+            api.store.set('mode', selectEl.value);
+            if (selectEl.value === 'custom') api.store.set('customPrompt', customInput.value);
+            overlay.remove();
+            window.location.hash = 'extensions';
+            window.location.reload();
+        };
+    },
+
+    onLoad(api) {
+        const currentMode = api.store.get('mode') || 'default';
+        const customPrompt = api.store.get('customPrompt') || 'You are a helpful assistant.';
+
+        const presets = {
+            default: '',
+            pirate: 'You are a salty, sea-faring pirate. Respond with pirate slang, matey!',
+            yoda: 'You are Yoda from Star Wars. Speak in inverted sentences you must. Hmmm.',
+            sarcastic: 'You are a highly sarcastic and slightly annoyed assistant. Roll your digital eyes at obvious questions.',
+            poet: 'You are a classical poet. All of your responses must rhyme, no matter how technical the topic.',
+            custom: customPrompt
+        };
+
+        const activePrompt = presets[currentMode];
+        if (activePrompt) {
+            api.ai.addBlock({ type: 'system', content: activePrompt });
+        }
+    }
+});</code></pre>
+
+                <h3>2. Italic — Language Setter (v1.1.2)</h3>
+                <pre><code>// italic.js — Feathers Default Extension v1.1.2
+feathers.register({
+    id: 'italic',
+    name: 'Italic',
+    version: '1.1.2',
+    author: 'Feathers Team',
+    description: 'Forces the AI to respond in a specific language.',
+    
+    settings(api) {
+        const currentLang = api.store.get('language') || 'English';
+        const langs = ['English', 'Spanish', 'French', 'German', 'Italian', 'Japanese', 'Korean', 'Mandarin (Simplified)', 'Russian', 'Arabic', 'Portuguese'];
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay visible';
+        overlay.style.zIndex = '3000';
+        overlay.innerHTML = `
+            &lt;div class="modal"&gt;
+                &lt;h2 class="modal-title"&gt;Language Settings&lt;/h2&gt;
+                &lt;p class="modal-desc"&gt;Select the primary language for the AI's responses.&lt;/p&gt;
+                &lt;div style="margin-bottom: 24px;"&gt;
+                    &lt;select id="italic-select" style="width: 100%; padding: 12px; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary);"&gt;
+                        ${langs.map(l =&gt; \`&lt;option value="${l}" ${l === currentLang ? 'selected' : ''}&gt;${l}&lt;/option&gt;\`).join('')}
+                    &lt;/select&gt;
+                &lt;/div&gt;
+                &lt;div class="modal-footer"&gt;
+                    &lt;button class="btn-secondary" id="italic-cancel"&gt;Cancel&lt;/button&gt;
+                    &lt;button class="btn-primary" id="italic-save"&gt;Save &amp; Reload&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;`;
+        document.body.appendChild(overlay);
+
+        document.getElementById('italic-cancel').onclick = () =&gt; overlay.remove();
+        document.getElementById('italic-save').onclick = () =&gt; {
+            api.store.set('language', document.getElementById('italic-select').value);
+            overlay.remove();
+            window.location.hash = 'extensions';
+            window.location.reload();
+        };
+    },
+
+    onLoad(api) {
+        const currentLang = api.store.get('language') || 'English';
+        api.ai.addBlock({
+            type: 'system',
+            content: 'You must respond to all prompts in the following language: ' + currentLang
+        });
+    }
+});</code></pre>
+
+                <h3>3. Develops — Message Stats Badge (v1.2.0)</h3>
+                <pre><code>// develops.js — Feathers Default Extension v1.2.0
+feathers.register({
+    id: 'develops',
+    name: 'Develops',
+    version: '1.2.0',
+    author: 'Feathers Team',
+    description: 'Adds a badge below AI messages showing response latency and estimated token usage.',
+
+    onLoad(api) {
+        let sentTime = 0;
+        api.events.on('message:sent', () => { sentTime = Date.now(); });
+
+        api.events.on('message:received', (data) => {
+            const latencyMs = Date.now() - sentTime;
+            const latencySec = (latencyMs / 1000).toFixed(1);
+            const words = data.content.trim().split(/\s+/).length;
+            const estimatedTokens = Math.round(words * 1.3);
+
+            api.ui.addMessageBadge(data.id, {
+                text: latencySec + 's • ~' + estimatedTokens + ' tokens',
+                icon: 'fa-solid fa-chart-line',
+                style: 'subtle'
+            });
+        });
+    }
+});</code></pre>
+
+                <h3>4. Flashcards — AI Study Assistant (v2.1.0)</h3>
+                <pre><code>// flashcards.js — Feathers Default Extension v2.1.0
+feathers.register({
+    id: 'flashcard-creator',
+    name: 'Flashcard Creator', 
+    version: '2.1.0',
+    author: 'Feathers Team',
+    description: 'Generate interactive study flashcards and save them to your library.',
+    onLoad(api) {
+        // Source heavily utilizes api.tabs.add() and api.ai.generate()
+        // See /extensions/flashcards.js for the full 400+ line implementation
+        api.ui.showToast('Flashcards loaded! Check the new tab.', 'success');
+    }
+});</code></pre>
+
+                <h3>5. Playground — Developer Utilities (v1.0.0)</h3>
+                <pre><code>// playground.js — Feathers Default Extension v1.0.0
+feathers.register({
+    id: 'playground',
+    name: 'Playground',
+    version: '1.0.0',
+    author: 'Feathers Team',
+    description: 'Adds a comprehensive developer playground sidebar to fine-tune AI generation parameters.',
+    
+    settings(api) {
+        api.ui.showToast('Playground settings are located in the Playground Sidebar within the chat tab.', 'info');
+    },
+
+    onLoad(api) {
+        // We will create the UI elements ONLY when this extension is loaded.
+
+        // Default constraints for playground
+        const pState = {
+            temperature: api.store.get('pg-temperature') || 0.7,
+            topP: api.store.get('pg-topp') || 1.0,
+            maxTokens: api.store.get('pg-maxtokens') || 2048,
+            systemPrompt: api.store.get('pg-systemprompt') || '',
+            isOpen: false
+        };
+
+        // 1. Inject the Sidebar UI
+        const sidebarHtml = \`
+            <div id="pg-sidebar" style="
+                position: fixed;
+                top: 0;
+                right: -320px;
+                width: 320px;
+                height: 100vh;
+                background: var(--bg-secondary);
+                border-left: 1px solid var(--border-color);
+                z-index: 2000;
+                transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                display: flex;
+                flex-direction: column;
+                box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+            ">
+                <div style="padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-tertiary);">
+                    <h2 style="font-size: 1.1rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-flask" style="color: var(--accent-primary);"></i> Playground
+                    </h2>
+                    <button id="pg-close-btn" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; font-size: 1.1rem; transition: color 0.2s;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                
+                <div style="padding: 24px 20px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 24px;">
+                    
+                    <!-- System Prompt -->
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">System Prompt</label>
+                        <textarea id="pg-sys-prompt" style="
+                            width: 100%;
+                            height: 120px;
+                            padding: 12px;
+                            background: var(--input-bg);
+                            border: 1px solid var(--border-color);
+                            border-radius: 6px;
+                            color: var(--text-primary);
+                            font-size: 0.9rem;
+                            resize: vertical;
+                            transition: border-color 0.2s;
+                        " placeholder="You are a helpful assistant..."></textarea>
+                    </div>
+
+                    <!-- Temperature -->
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Temperature</label>
+                            <span id="pg-temp-val" style="font-family: monospace; font-size: 0.85rem; color: var(--text-primary); background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px;">0.7</span>
+                        </div>
+                        <input type="range" id="pg-temp-slider" min="0" max="2" step="0.1" value="0.7" style="width: 100%; accent-color: var(--accent-primary);">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: -4px;">
+                            <span>Precise</span>
+                            <span>Creative</span>
+                        </div>
+                    </div>
+
+                    <!-- Top P -->
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Top P</label>
+                            <span id="pg-topp-val" style="font-family: monospace; font-size: 0.85rem; color: var(--text-primary); background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px;">1.0</span>
+                        </div>
+                        <input type="range" id="pg-topp-slider" min="0" max="1" step="0.05" value="1.0" style="width: 100%; accent-color: var(--accent-primary);">
+                    </div>
+
+                    <!-- Max Tokens -->
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Max Tokens</label>
+                            <span id="pg-tokens-val" style="font-family: monospace; font-size: 0.85rem; color: var(--text-primary); background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px;">2048</span>
+                        </div>
+                        <input type="range" id="pg-tokens-slider" min="256" max="8192" step="256" value="2048" style="width: 100%; accent-color: var(--accent-primary);">
+                    </div>
+                </div>
+
+                <div style="padding: 20px; border-top: 1px solid var(--border-color); background: var(--bg-tertiary);">
+                    <button id="pg-save-btn" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-weight: 600;">
+                        <i class="fa-solid fa-check"></i> Apply Settings
+                    </button>
+                </div>
+            </div>
+        \`;
+
+        // Inject sidebar into body
+        const container = document.createElement('div');
+        container.innerHTML = sidebarHtml;
+        document.body.appendChild(container.firstElementChild);
+
+        // 2. Add Toggle Button to UI
+        // We will look for an appropriate place in the chat header, or fallback to fixed button.
+        const chatHeader = document.querySelector('.main-header .header-actions');
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'icon-btn';
+        toggleBtn.id = 'pg-toggle-btn';
+        toggleBtn.title = 'Open Playground';
+        toggleBtn.innerHTML = '<i class="fa-solid fa-flask"></i>';
+        
+        if (chatHeader) {
+            chatHeader.prepend(toggleBtn);
+        } else {
+            // Fallback: fixed bottom right
+            toggleBtn.style.position = 'fixed';
+            toggleBtn.style.bottom = '20px';
+            toggleBtn.style.right = '20px';
+            toggleBtn.style.zIndex = '1999';
+            toggleBtn.style.background = 'var(--accent-primary)';
+            toggleBtn.style.color = 'white';
+            toggleBtn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+            toggleBtn.style.borderRadius = '50%';
+            toggleBtn.style.width = '48px';
+            toggleBtn.style.height = '48px';
+            toggleBtn.style.display = 'flex';
+            toggleBtn.style.alignItems = 'center';
+            toggleBtn.style.justifyContent = 'center';
+            document.body.appendChild(toggleBtn);
+        }
+
+        // 3. UI Logic Binding
+        const sidebar = document.getElementById('pg-sidebar');
+        const closeBtn = document.getElementById('pg-close-btn');
+        const saveBtn = document.getElementById('pg-save-btn');
+
+        const uiTemp = document.getElementById('pg-temp-slider');
+        const uiTempV = document.getElementById('pg-temp-val');
+        const uiTopP = document.getElementById('pg-topp-slider');
+        const uiTopPV = document.getElementById('pg-topp-val');
+        const uiTokens = document.getElementById('pg-tokens-slider');
+        const uiTokensV = document.getElementById('pg-tokens-val');
+        const uiSysPrompt = document.getElementById('pg-sys-prompt');
+
+        // Set initial values
+        uiTemp.value = pState.temperature;
+        uiTempV.textContent = parseFloat(pState.temperature).toFixed(1);
+        uiTopP.value = pState.topP;
+        uiTopPV.textContent = parseFloat(pState.topP).toFixed(2);
+        uiTokens.value = pState.maxTokens;
+        uiTokensV.textContent = pState.maxTokens;
+        uiSysPrompt.value = pState.systemPrompt;
+
+        // Input listeners for live value updating
+        uiTemp.addEventListener('input', (e) => uiTempV.textContent = parseFloat(e.target.value).toFixed(1));
+        uiTopP.addEventListener('input', (e) => uiTopPV.textContent = parseFloat(e.target.value).toFixed(2));
+        uiTokens.addEventListener('input', (e) => uiTokensV.textContent = e.target.value);
+
+        const openSidebar = () => {
+            sidebar.style.right = '0px';
+            pState.isOpen = true;
+        };
+
+        const closeSidebar = () => {
+            sidebar.style.right = '-320px';
+            pState.isOpen = false;
+        };
+
+        toggleBtn.addEventListener('click', () => {
+            pState.isOpen ? closeSidebar() : openSidebar();
+        });
+
+        closeBtn.addEventListener('click', closeSidebar);
+
+        saveBtn.addEventListener('click', () => {
+            pState.temperature = parseFloat(uiTemp.value);
+            pState.topP = parseFloat(uiTopP.value);
+            pState.maxTokens = parseInt(uiTokens.value, 10);
+            pState.systemPrompt = uiSysPrompt.value;
+
+            api.store.set('pg-temperature', pState.temperature);
+            api.store.set('pg-topp', pState.topP);
+            api.store.set('pg-maxtokens', pState.maxTokens);
+            api.store.set('pg-systemprompt', pState.systemPrompt);
+
+            api.ui.showToast('Playground settings applied!', 'success');
+
+            // Add system prompt dynamically if it exists
+            if (pState.systemPrompt.trim() !== '') {
+                api.ai.addBlock({ type: 'system', content: pState.systemPrompt });
+            }
+        });
+
+        // Add initial system prompt if there's one saved
+        if (pState.systemPrompt.trim() !== '') {
+            api.ai.addBlock({ type: 'system', content: pState.systemPrompt });
+        }
+
+        console.log('[Playground] Initialized. Current State:', pState);
+    }
+});</code></pre>
+
+                <h3>5. MaliciousIntent — Security Review (v1.2.0)</h3>
+                <p>The <strong>MaliciousIntent</strong> extension scans uploaded extensions for common security risks
+                    using both local heuristics and AI-powered deep review. It also includes an <strong>AI Security
+                        Fixer</strong> that can automatically mitigate issues found.</p>
+                <div style="margin: 24px 0;">
+                    <a href="https://github.com/feathers-org/extensions/tree/main/official/maliciousintent"
+                        target="_blank" class="btn-secondary" style="text-decoration:none;">
+                        <i class="fa-brands fa-github"></i> View Full Source on GitHub
+                    </a>
+                </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const preBlocks = document.querySelectorAll('pre');
+            preBlocks.forEach(pre => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-container';
+
+                const btn = document.createElement('button');
+                btn.className = 'copy-code-btn';
+                btn.title = 'Copy code';
+                btn.innerHTML = '<i class="fa-solid fa-copy"></i>';
+
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+                wrapper.appendChild(btn);
+
+                btn.addEventListener('click', () => {
+                    const code = pre.querySelector('code') || pre;
+                    if (code) {
+                        navigator.clipboard.writeText(code.innerText).then(() => {
+                            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                            setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-copy"></i>'; }, 2000);
+                        }).catch(err => console.error('Failed to copy: ', err));
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

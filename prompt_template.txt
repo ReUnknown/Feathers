@@ -1,0 +1,213 @@
+I want to create a local extension for the "Feathers" AI chat application.
+
+Please write a single, complete JavaScript file that I can upload to the app via the Extensions tab. The extension must use the 'feathers.register' API to initialize.
+
+============================================================
+FEATHERS EXTENSION API REFERENCE (v2.0.0)
+============================================================
+
+REGISTRATION:
+Every extension must call feathers.register() at the top level.
+
+feathers.register({
+    id: 'unique-id-no-spaces',      // required, lowercase, no spaces
+    name: 'Your Extension Name',    // short, clean display name
+    version: '2.0.0',
+    author: 'Your Name',
+    description: 'What your extension does.',
+
+    // OPTIONAL: settings(api)
+    // If defined, a gear icon will appear on the extension card.
+    // This runs whether the extension is enabled OR disabled.
+    settings(api) {
+        // Build a modal overlay easily:
+        api.ui.createModal({
+            title: 'Your Settings',
+            icon: 'fa-gear',
+            contentHtml: `<p>Setting descriptions</p>`,
+            saveText: 'Save & Reload',
+            cancelText: 'Cancel',
+            onSave: () => {
+                // api.store.set('mySetting', val);
+                api.ui.showToast('Settings saved!', 'success');
+                window.location.hash = 'extensions';
+                window.location.reload();
+            },
+            onCancel: () => {}
+        });
+    },
+
+    // OPTIONAL: onLoad(api)
+    // Runs only when the extension is ENABLED.
+    onLoad(api) {
+
+        // -------------------------------------------------------
+        // 1. CHAT API
+        // Read app state dynamically.
+        // -------------------------------------------------------
+        const activeChat = api.chat.getActive(); // { id, name } or null
+        const history = api.chat.getHistory(); // array of message objects {role, content}
+
+        // -------------------------------------------------------
+        // 2. AI GENERATION API
+        // Generate responses quietly in the background using the user's
+        // active AI provider and API keys. No need to fetch() yourself.
+        // -------------------------------------------------------
+        async function doSomethingCool() {
+            try {
+                api.ui.showToast('Thinking...', 'info');
+                // api.ai.generate(systemPrompt, userPrompt, [optionalHistoryArray])
+                const response = await api.ai.generate(
+                    'You are a summarizer.',
+                    'Summarize the word "Apple".'
+                );
+                api.ui.createModal({
+                    title: 'AI Result',
+                    icon: 'fa-robot',
+                    contentHtml: `<p>${response}</p>`,
+                    cancelText: 'Close'
+                });
+            } catch (err) {
+                api.ui.showToast('Error: ' + err.message, 'error');
+            }
+        }
+
+        // -------------------------------------------------------
+        // 2. CUSTOM SIDEBAR TABS (Total UI Freedom)
+        // Add a completely new tab to the main sidebar.
+        // -------------------------------------------------------
+        api.tabs.add({
+            id: 'my-custom-tab',         // Unique tab ID (no spaces)
+            title: 'My Custom View',     // Label shown in sidebar
+            icon: 'fa-solid fa-star',    // Font Awesome icon class
+            render: (container) => {
+                // `container` is a <section> element that fills the main view.
+                // You have TOTAL CONTROL over this section. You can inject raw CSS
+                // or you can use native Feathers UI components, or both.
+                
+                // Example of matching Native Feathers UI styling:
+                // Use .view-header for the sticky top section
+                // Use var(--bg-tertiary), var(--border-color), var(--text-secondary) for native coloring
+                container.innerHTML = `
+                    <div class="view-header">
+                        <h2>My Custom View</h2>
+                    </div>
+                    <div id="my-tab-content" style="padding: 24px;">
+                        <div style="background: var(--bg-tertiary); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; margin-bottom: 24px;">
+                            <h3 style="color: var(--text);">Native Styled Card</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 16px;">This card blends entirely into the native app design.
+                             Even dark mode shifts will seamlessly alter var(--bg-tertiary).</p>
+                            <button id="test-ai-btn" class="btn-primary">Generate Something</button>
+                        </div>
+                        <style>
+                            .alien-box { background: #00ff00; color: #000; padding: 20px; border-radius: 5px; box-shadow: 0 0 15px lime; }
+                            .alien-box h3 { animation: spin 2s linear infinite; display: inline-block; }
+                            @keyframes spin { 100% { transform: rotate(360deg); } }
+                        </style>
+                        <div class="alien-box">
+                            <h3>Total Freedom</h3>
+                            <p>You can do whatever you want here.</p>
+                        </div>
+                    </div>
+                `;
+
+                // Attach events dynamically
+                container.querySelector('#test-ai-btn').addEventListener('click', doSomethingCool);
+            }
+        });
+
+        // -------------------------------------------------------
+        // 3. EVENT HOOKS & UI BADGES
+        // React to messages and attach badges to the UI.
+        // -------------------------------------------------------
+        api.events.on('message:received', (data) => {
+            // data.id        - the unique message ID (REQUIRED for badges)
+            // data.content   - the AI's response text
+            // data.chatId    - the current chat ID
+            
+            // Add a badge below the message
+            api.ui.addMessageBadge(data.id, {
+                text: 'Verified Response',
+                icon: 'fa-solid fa-check-shield', // Font Awesome icon class
+                style: 'primary'                  // 'subtle' or 'primary'
+            });
+        });
+
+        api.events.on('theme:changed', (mode) => {
+            // mode is 'normal' or 'compact'
+        });
+
+        // -------------------------------------------------------
+        // 4. TAB TRACKING API
+        // Track the user's active view/tab.
+        // -------------------------------------------------------
+        const currentTab = api.tabs.getActive(); // e.g., 'chat-view' or 'settings-view'
+        
+        // Listen for tab changes
+        api.events.on('view:changed', (viewId) => {
+            console.log('User switched to view:', viewId);
+        });
+
+        // -------------------------------------------------------
+        // 5. PERSISTENT STORAGE
+        // Store and retrieve values across sessions.
+        // Scoped automatically to your extension's ID.
+        // -------------------------------------------------------
+        const savedSetting = api.store.get('myKey');   // returns null if not set
+        api.store.set('myKey', 'myValue');
+    },
+
+    // OPTIONAL: onUnload(api)
+    // Clean up DOM listeners or timers you created in onLoad
+    onUnload(api) {
+        // Events and AI blocks bound to `api` are self-cleaning
+        // Use this manually to clean up `setInterval` or window event listeners
+    }
+});
+
+============================================================
+STYLING & UI REFERENCE
+============================================================
+You can build wild new layouts or match the existing UI. 
+To blend seamlessly into Feathers, use these existing variables/classes:
+
+- Variables:
+  var(--bg-primary), var(--bg-secondary), var(--bg-tertiary)
+  var(--text), var(--text-secondary), var(--text-muted)
+  var(--accent-primary) (The brand purple)
+  var(--border-color)
+
+- Classes: 
+  .btn-primary (solid purple), .btn-secondary (outline ghost)
+  .view-header (for sticky tab top bar)
+
+============================================================
+PACKAGING MULTIPLE FILES (V2)
+============================================================
+If the extension requires external assets (like images or long CSS/HTML strings):
+Provide the code as a structured folder format that the developer will zip up.
+Include a \`manifest.json\` at the root:
+
+{
+  "id": "my-extension",
+  "name": "My Extension",
+  "version": "1.0",
+  "main": "script.js"
+}
+
+Any other resources bundled in the zip can be accessed via \`api.getResource('filename.png')\` which returns a Base64 string.
+
+============================================================
+ERROR SUPPORT NOTES
+============================================================
+
+1. The id field must be unique across all extensions. Use lowercase with hyphens.
+
+2. If you add a custom sidebar tab via api.tabs.add(), remember that the "container" argument is an empty DOM element that covers the main view. You must build your view's HTML inside it, usually starting with a \`<div class="view-header">\` for consistency.
+
+============================================================
+YOUR TASK
+============================================================
+
+Write a Feathers extension that does the following:
+[INSERT YOUR IDEA HERE]
